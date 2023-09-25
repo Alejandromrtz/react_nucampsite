@@ -5,7 +5,7 @@ import { selectFeaturedCampsite } from '../campsites/campsitesSlice';
 import { selectFeaturedPromotion } from '../promotions/promotionsSlice';
 import { selectFeaturedPartner } from '../partners/partnersSlice';
 
-const DisplayList = () => {
+const DisplayList = () => { 
     const items = [
         selectFeaturedCampsite(),
         selectFeaturedPromotion(),
