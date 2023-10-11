@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { Button, Modal, ModalHeader, ModalBody, FormGroup, Label } from 'reactstrap';
-import { setCurrentUser, selectCurrentUser } from './userSlice'; // Adjust the import path as needed
-import defaultAvatar from '../../app/assets/img/unicorn.png'; // Import your default avatar image
+import { setCurrentUser, selectCurrentUser } from './userSlice';
+import defaultAvatar from '../../app/assets/img/unicorn.png';
+import {validateUserLoginForm} from '../../utils/validateUserLoginForm';
 
 const UserLoginForm = () => {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -46,7 +47,7 @@ const UserLoginForm = () => {
       <Modal isOpen={loginModalOpen}>
         <ModalHeader toggle={() => setLoginModalOpen(false)}>Login</ModalHeader>
         <ModalBody>
-          <Formik initialValues={{ username: '', password: '' }} onSubmit={handleLogin}>
+          <Formik validate={validateUserLoginForm} initialValues={{ username: '', password: '' }} onSubmit={handleLogin}>
             <Form>
               <FormGroup>
                 <Label htmlFor='username'>Username</Label>
@@ -56,7 +57,8 @@ const UserLoginForm = () => {
                   name='username'
                   placeholder='Username'
                   className='form-control'
-                />
+                /> 
+                <ErrorMessage name='username'/>
               </FormGroup>
               <FormGroup>
                 <Label htmlFor='password'>Password</Label>
@@ -67,6 +69,7 @@ const UserLoginForm = () => {
                   placeholder='Password'
                   className='form-control'
                 />
+                <ErrorMessage name='password'/>
               </FormGroup>
               <Button type='submit' color='primary'>
                 Login
