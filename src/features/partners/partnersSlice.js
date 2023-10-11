@@ -1,7 +1,19 @@
-import { createSlice, createAsyncThunk, isAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 // import { PARTNERS } from '../../app/shared/PARTNERS';
 import { baseUrl } from '../../app/shared/baseUrl';
 import { mapImageURL } from '../../utils/mapImageURL';
+
+export const fetchPartners = createAsyncThunk(
+    'partners/fetchPartners',
+    async () => {
+        const response = await fetch(baseUrl + 'partners');
+        if (!response.ok) {
+            return Promise.reject('Unable to fetch, status: ' + response.status);
+        }
+        const data = await response.json();
+        return data;
+    }
+);
 
 const initialState = {
     partnersArray: [],
@@ -20,26 +32,14 @@ const partnersSlice = createSlice({
         [fetchPartners.fulfilled]: (state, action) => {
             state.isLoading = false;
             state.errMsg = '';
-            state.partnersArray = mapImageURL(action.payload);            
+            state.partnersArray = mapImageURL(action.payload);
         },
-        [fetchPartners.rejected]: (state) => {
+        [fetchPartners.rejected]: (state, action) => {
             state.isLoading = false;
-            state.errMsg = action.error ? action.error.message : "Fetch failed";
-        } 
+            state.errMsg = action.error ? action.error.message : 'Fetch failed';
+        }
     }
 });
-
-export const fetchPartners = createAsyncThunk(
-    'partners/fetchPartners',
-    async () => {
-        const response = await fetch(baseUrl + 'partners');
-        if (!response.ok){
-            return Promise.reject('Unable to fetch, status: ' + response.status);
-        }
-        const data = await response.json();
-        return data;
-    }
-)
 
 export const partnersReducer = partnersSlice.reducer;
 
@@ -49,7 +49,7 @@ export const selectAllPartners = (state) => {
 
 export const selectFeaturedPartner = (state) => {
     return {
-       featuredItem: state.partners.partnersArray.find(
+        featuredItem: state.partners.partnersArray.find(
             (partner) => partner.featured
         ),
         isLoading: state.partners.isLoading,

@@ -13,36 +13,35 @@ export const fetchPromotions = createAsyncThunk(
         const data = await response.json();
         return data;
     }
-)
+);
 
 const initialState = {
     promotionsArray: [],
     isLoading: true,
     errMsg: ''
-}
+};
 
 const promotionsSlice = createSlice({
-    name: "promotions",
+    name: 'promotions',
     initialState,
     reducers: {},
-    extraReducers:  {
-        [fetchPromotions.pending]:(state) => {
-            state.isLoading = true,
+    extraReducers: {
+        [fetchPromotions.pending]: (state) => {
+            state.isLoading = true;
         },
-        [fetchPromotions.rejected]: (state, action) => {
+        [fetchPromotions.fulfilled]: (state, action) => {
             state.isLoading = false;
             state.errMsg = '';
             state.promotionsArray = mapImageURL(action.payload);
         },
         [fetchPromotions.rejected]: (state, action) => {
             state.isLoading = false;
-            state.errMsg = action.error ? action.error.message: 'Fetch Failed';
+            state.errMsg = action.error ? action.error.message : 'Fetch failed';
         }
-
     }
-})
+});
 
-export const promotionReducer = promotionsSlice.reducer;
+export const promotionsReducer = promotionsSlice.reducer;
 
 export const selectFeaturedPromotion = (state) => {
     return {
